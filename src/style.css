@@ -1,0 +1,17 @@
+.helper {
+  font-size: 30%;
+  padding-right: 2%;
+  padding-bottom: 2%;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  opacity: 0.3;
+}
+
+.helper:hover {
+  opacity: 1;
+}
+
+a {
+  color: var(--theme-ui-colors-text)
+}

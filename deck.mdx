@@ -4,12 +4,95 @@ import {
   Step,
 } from "code-surfer";
 import { github, vsDark } from "@code-surfer/themes";
+import { themes, Appear, Notes, Head } from 'mdx-deck'
 
-export const theme = vsDark;
+import { customTheme } from './theme'
 
-# Hello 👋
+import { Helper } from './src/helper';
+import { Profile } from './src/profile';
 
-You are using [MDX Deck](https://github.com/jxnblk/mdx-deck) and [Code Surfer](https://codesurfer.pomb.us)
+<!-- // export const theme = { ...vsDark, ...customTheme }; -->
+export const theme = {  ...themes.future, ...customTheme };
+
+<Head>
+  <title>RxJS</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
+</Head>
+
+<h1>RxJS</h1>
+
+<Helper></Helper>
+
+---
+
+<Profile></Profile>
+
+---
+
+Recap / Intro
+
+---
+
+<CodeSurfer>
+
+```js 4:6
+import { interval } from 'rxjs';
+import { take } from 'rxjs/operators';
+
+interval(1000)
+  .pipe(take(10))
+  .subscribe(d => console.log(d), err => console.log(err), () => console.log('completed'))
+
+```
+
+```diff 4 subtitle="emits 0, 1, 2, 3, 4 .... ∞"
+
+```
+
+```diff 5
+
+```
+
+```diff 5[9:16] subtitle="stop after 10 emissions"
+
+```
+
+```diff 6[14:32] subtitle="nextFn"
+
+```
+
+```diff 6[35:57] subtitle="errorFn"
+
+```
+
+```diff 6[60:89] subtitle="completeFn"
+
+```
+
+```diff 4:6
+
+```
+
+</CodeSurfer>
+
+---
+
+<CodeSurfer>
+
+```js 4:9
+import { interval } from 'rxjs';                                                  
+import { filter, map, take } from 'rxjs/operators';
+
+interval(1000)
+  .pipe(
+    filter(x => x % 2 == 0),
+    map(x => x * 2),
+    take(10)
+  )
+  .subscribe(nextFn, errorFn, completeFn)
+```
+
+</CodeSurfer>
 
 ---
 
