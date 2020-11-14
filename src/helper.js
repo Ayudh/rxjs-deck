@@ -7,7 +7,7 @@ export class Helper extends React.Component {
   render() {
     return (
       <div className="helper">
-        Use ⬅️ or ➡️ to navigate
+        Use ← or → to navigate
         <br/>
         option/alt + P : Presentation Mode
         <br/>

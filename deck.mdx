@@ -59,8 +59,7 @@ Agenda
 
 <li>Reactive Architecture</li>
 <li>Higher Order operators</li>
-<li>Error handling</li>
-<li>Understanding and debugging RxJS</li>
+<li>Understanding and debugging operators</li>
 <li>Marble diagrams</li>
 <li>Tips</li>
 <li>Limitations</li>
@@ -164,18 +163,21 @@ refresh() {
 
 ---
 
-when the _refresh button is clicked_ make  
- an _api call and fetch the score_
+<p style={{fontSize: '70%', margin: '0 10% 0 10%'}}>
+when the <span style={{color: 'red'}}>refresh button is clicked</span>, make an  <br/>
+<span style={{color: 'orange'}}>api call and fetch the score</span>
+</p>
 
 ---
 
-<CodeSurferColumns sizes={[1,1]} themes={[github, vsDark]}>
+<CodeSurferColumns sizes={[1,2]} themes={[github, vsDark]}>
 
 <Step subtitle="reacting to button click">
 
-when the _refresh button is clicked_ make  
- an api call and fetch the score
-
+<p style={{fontSize: '70%', margin: '0 10% 0 10%'}}>
+when the <span style={{color: 'red'}}>refresh button is clicked</span>, make an
+<span style={{color: null}}> api call and fetch the score</span>
+</p>
 
 ```js 2,4,6
 const refreshButton = document.getElementById('#refresh');
@@ -190,9 +192,10 @@ refresh$.subscribe(() => {
 
 <Step subtitle="api call">
 
-when the refresh button is clicked make  
- an _api call and fetch the score_
-
+<p style={{fontSize: '70%', margin: '0 10% 0 10%'}}>
+when the <span style={{color: null}}>refresh button is clicked</span>, make an
+<span style={{color: 'orange'}}> api call and fetch the score</span>
+</p>
 
 ```js 8,10
 const refreshButton = document.getElementById('#refresh');
@@ -211,9 +214,10 @@ fetchScore().subscribe(d => {
 
 <Step subtitle="how to join these two events ?">
 
-when the refresh button is clicked make  
- an api call and fetch the score
-
+<p style={{fontSize: '70%', margin: '0 10% 0 10%'}}>
+when the <span style={{color: 'red'}}>refresh button is clicked</span>, make an
+<span style={{color: 'orange'}}> api call and fetch the score</span>
+</p>
 
 ```js 4,6,8,10
 const refreshButton = document.getElementById('#refresh');
@@ -232,9 +236,10 @@ fetchScore().subscribe(d => {
 
 <Step subtitle="how about this ?">
 
-when the refresh button is clicked make  
- an api call and fetch the score
-
+<p style={{fontSize: '70%', margin: '0 10% 0 10%'}}>
+when the <span style={{color: 'red'}}>refresh button is clicked</span>, make an
+<span style={{color: 'orange'}}> api call and fetch the score</span>
+</p>
 
 ```js 4,5,7,8
 const refreshButton = document.getElementById('#refresh');
@@ -251,9 +256,10 @@ refresh$.subscribe(() => {
 
 <Step subtitle="we use switchMap">
 
-when the refresh button is clicked make  
- an api call and fetch the score
-
+<p style={{fontSize: '70%', margin: '0 10% 0 10%'}}>
+when the <span style={{color: 'red'}}>refresh button is clicked</span>, make an
+<span style={{color: 'orange'}}> api call and fetch the score</span>
+</p>
 
 ```js 5[9:37]
 const refreshButton = document.getElementById('#refresh');
@@ -481,14 +487,17 @@ targetMouseDown$.pipe(
 
 ---
 
+Higher-Order operators
+
+---
+
 <CodeSurfer>
 
-```js 4:6
+```js 4:5
 import { interval } from 'rxjs';
 import { take } from 'rxjs/operators';
 
 interval(1000)
-  .pipe(take(10))
   .subscribe(d => console.log(d), err => console.log(err), () => console.log('completed'))
 
 ```
@@ -497,131 +506,39 @@ interval(1000)
 
 ```
 
-```diff 5
+```diff 5[14:32] subtitle="nextFn"
 
 ```
 
-```diff 5[9:16] subtitle="stop after 10 emissions"
+```diff 5[35:57] subtitle="errorFn"
 
 ```
 
-```diff 6[14:32] subtitle="nextFn"
+```diff 5[60:89] subtitle="completeFn"
 
 ```
 
-```diff 6[35:57] subtitle="errorFn"
+```diff 4:5 subtitle="logs 0, 1, 2 ..."
 
 ```
 
-```diff 6[60:89] subtitle="completeFn"
-
-```
-
-```diff 4:6
-
-```
-
-</CodeSurfer>
-
----
-
-<CodeSurfer>
-
-```js 4:9
-import { interval } from 'rxjs';                                                  
-import { filter, map, take } from 'rxjs/operators';
+```js 5[9:23]
+import { interval } from 'rxjs';
+import { take } from 'rxjs/operators';
 
 interval(1000)
-  .pipe(
-    filter(x => x % 2 == 0),
-    map(x => x * 2),
-    take(10)
-  )
-  .subscribe(nextFn, errorFn, completeFn)
+  .pipe(map(i => i * 2))
+  .subscribe(d => console.log(d), err => console.log(err), () => console.log('completed'))
+
 ```
 
-</CodeSurfer>
+```js 5[9:33]
+import { interval } from 'rxjs';
+import { take } from 'rxjs/operators';
 
----
-
-<CodeSurfer>
-
-```js title="This is a title" subtitle="and this a subtitle"
-function lorem(ipsum, dolor = 1) {
-  const sit = ipsum == null ? 0 : ipsum.sit;
-  dolor = sit - amet(dolor);
-  return sit
-    ? consectetur(ipsum, 0, dolor < 0 ? 0 : dolor)
-    : [];
-}
-
-function incididunt(ipsum, ut = 1) {
-  ut = labore.et(amet(ut), 0);
-  const sit = ipsum == null ? 0 : ipsum.sit;
-
-  if (!sit || ut < 1) {
-    return [];
-  }
-
-  let dolore = 0;
-  let magna = 0;
-  const aliqua = new eiusmod(labore.ut(sit / ut));
-
-  while (dolore < sit) {
-    aliqua[magna++] = consectetur(
-      ipsum,
-      dolore,
-      (dolore += ut)
-    );
-  }
-
-  return aliqua;
-}
-```
-
-```js
-function lorem(ipsum, dolor = 1) {
-  const sit = ipsum == null ? 0 : ipsum.sit;
-  dolor = sit - amet(dolor);
-  return sit
-    ? consectetur(ipsum, 0, dolor < 0 ? 0 : dolor)
-    : [];
-}
-
-function adipiscing(...elit) {
-  if (!elit.sit) {
-    return [];
-  }
-
-  const sed = elit[0];
-  return eiusmod.tempor(sed) ? sed : [sed];
-}
-
-function incididunt(ipsum, ut = 1) {
-  ut = labore.et(amet(ut), 0);
-  const sit = ipsum == null ? 0 : ipsum.sit;
-
-  if (!sit || ut < 1) {
-    return [];
-  }
-
-  let dolore = 0;
-  let magna = 0;
-  const aliqua = new eiusmod(labore.ut(sit / ut));
-
-  while (dolore < sit) {
-    aliqua[magna++] = consectetur(
-      ipsum,
-      dolore,
-      (dolore += ut)
-    );
-  }
-
-  return aliqua;
-}
-```
-
-```diff 1[10:14],2[15:19],3[22:27],10:12
+interval(1000)
+  .pipe(switchMap(i => of(i * 2)))
+  .subscribe(d => console.log(d), err => console.log(err), () => console.log('completed'))
 
 ```
 
@@ -629,48 +546,236 @@ function incididunt(ipsum, ut = 1) {
 
 ---
 
-<CodeSurferColumns themes={[vsDark, github]}>
+<List>
+
+<li>These operators map a value to a observable</li>
+
+<Appear>
+<li>switchMap, exhaustMap, concatMap, mergeMap</li>
+<li><a href="https://drive.google.com/file/d/1JcbryiwspeGnUWp265TwxC2VWYUGPkEl/view?usp=sharing" target="__blank">Slides</a></li>
+
+</Appear>
+
+</List>
+
+---
+
+<List>
+
+<li>switchMap - discards the child obs. if any</li>
+
+<Appear>
+<li>exhaustMap - discards the new value</li>
+<li>mergeMap - more than 1 child obs. but order is not maintained</li>
+<li>concatMap - only 1 child obs. but maintains a buffer and picks values eventually in order</li>
+
+</Appear>
+
+</List>
+
+---
+
+<List>
+
+<li>don't just use switchMap</li>
+
+<Appear>
+<li>decide which one to use based on context</li>
+<li>all these differ how they handle new value & child obs.</li>
+<li><a href="https://medium.com/angular-in-depth/switchmap-bugs-b6de69155524" target="__blank">RxJS: Avoiding switchMap-Related Bugs</a></li>
+
+
+</Appear>
+
+</List>
+
+---
+
+Understanding and debugging operators
+
+---
+
+<List>
+
+<li>Websocket - first emit would be initial value</li>
+
+<Appear>
+<li>subsequently emits the delta/difference with the previous value</li>
+<li><a href="https://stackblitz.com/edit/rxjs-tech-eg?file=index.ts" target="__blank">https://stackblitz.com/edit/rxjs-tech-eg</a></li>
+</Appear>
+
+</List>
+
+---
+
+<CodeSurferColumns sizes={[1,2]} themes={[github, vsDark]}>
 
 <Step>
 
-```js
-const magna = aliqua => aliqua.ut((enim, ad) => enim, 0);
-```
+<ul style={{fontSize: '80%'}}>
+
+<li>socket</li>
+<li>scan to accumulate</li>
+
+</ul>
 
 ```js
-const minim = (ad, enim) => dolore.magna(ad / enim);
+socket
+  .pipe(
+    scan(...),
+    take(20),
+  )
+  .subscribe(...)
 ```
 
 </Step>
 
 <Step>
 
-```js
-const lorem = (ipsum, dolor, sit) => {
-  const amet = dolor - ipsum;
-  return consectetur.adipiscing(
-    {
-      elit: sed.eiusmod(sit - dolor) / amet + 2,
-    },
-    (tempor, incididunt) => ipsum + amet * incididunt
-  );
-};
+<ul style={{fontSize: '80%'}}>
 
-const magna = aliqua => aliqua.ut((enim, ad) => enim, 0);
+<li>socket</li>
+<li>scan to accumulate</li>
+
+</ul>
+
+```js 3
+socket
+  .pipe(
+    scan(...),
+    take(20),
+  )
+  .subscribe(...)
 ```
 
-```js
-const minim = (ad, enim) => dolore.magna(ad / enim);
+</Step>
 
-const sed = (eiusmod, tempor, incididunt) => {
-  const ut = tempor - eiusmod;
-  return labore.et(
-    {
-      amet: dolore.magna(incididunt - tempor) / ut + 2,
-    },
-    (aliqua, elit) => eiusmod + ut * elit
-  );
-};
+<Step subtitle="need to reduce UI updation">
+
+<ul style={{fontSize: '80%'}}>
+
+<li>socket</li>
+<li>scan to accumulate</li>
+
+</ul>
+
+```js
+socket
+  .pipe(
+    scan(...),
+    take(20),
+  )
+  .subscribe(...)
+```
+
+</Step>
+
+<Step>
+
+<ul style={{fontSize: '80%'}}>
+
+<li>socket</li>
+<li>scan to accumulate</li>
+<li>throttleTime</li>
+
+</ul>
+
+```js 3
+socket
+  .pipe(
+    throttleTime(500),
+    scan(...),
+    take(20),
+  )
+  .subscribe(...)
+```
+
+</Step>
+
+<Step>
+
+<ul style={{fontSize: '80%'}}>
+
+<li>socket</li>
+<li>scan to accumulate</li>
+<li>throttleTime ⚠️</li>
+
+</ul>
+
+```js
+socket
+  .pipe(
+    throttleTime(500),
+    scan(...),
+    take(20),
+  )
+  .subscribe(...)
+```
+
+</Step>
+
+<Step>
+
+<ul style={{fontSize: '80%'}}>
+
+<li>socket</li>
+<li>scan to accumulate</li>
+<li>throttleTime</li>
+
+</ul>
+
+```js 3,4
+socket
+  .pipe(
+    scan(...),
+    throttleTime(500),
+    take(20),
+  )
+  .subscribe(...)
+```
+
+</Step>
+
+<Step>
+
+<ul style={{fontSize: '80%'}}>
+
+<li>socket</li>
+<li>scan to accumulate</li>
+<li>throttleTime</li>
+
+</ul>
+
+```js 4,5
+socket
+  .pipe(
+    scan(...),
+    throttleTime(500),
+    take(20),
+  )
+  .subscribe(...)
+```
+
+</Step>
+
+<Step>
+
+<ul style={{fontSize: '80%'}}>
+
+<li>socket</li>
+<li>scan to accumulate</li>
+<li>throttleTime</li>
+
+</ul>
+
+```js 4,5
+socket
+  .pipe(
+    scan(...),
+    take(20),
+    throttleTime(500),
+  )
+  .subscribe(...)
 ```
 
 </Step>
@@ -679,5 +784,284 @@ const sed = (eiusmod, tempor, incididunt) => {
 
 ---
 
-docs:  
-[codesurfer.pomb.us](https://codesurfer.pomb.us)
+<List>
+
+<li>position of operator in the chain matters</li>
+
+<Appear>
+<li>decide based on context</li>
+<li>think of operator chain in verbal format</li>
+
+</Appear>
+
+</List>
+
+---
+
+<CodeSurfer>
+
+```js subtitle="Type-ahead eg."
+                                                                            
+const inputEle = document.getElementById('#input');
+const input$ = fromEvent(inputEle, 'input');
+
+input$
+  .pipe(
+    debounceTime(200),
+    distinctUntilChanged(),
+    switchMap(text => getSuggestions(text)),
+  )
+  .subscribe(...)
+```
+
+```js 3
+                                                                            
+const inputEle = document.getElementById('#input');
+const input$ = fromEvent(inputEle, 'input');
+
+input$
+  .pipe(
+    debounceTime(200),
+    distinctUntilChanged(),
+    switchMap(text => getSuggestions(text)),
+  )
+  .subscribe(...)
+```
+
+```js 5
+                                                                            
+const inputEle = document.getElementById('#input');
+const input$ = fromEvent(inputEle, 'input');
+
+input$
+  .pipe(
+    debounceTime(200),
+    distinctUntilChanged(),
+    switchMap(text => getSuggestions(text)),
+  )
+  .subscribe(...)
+```
+
+```js 7
+                                                                            
+const inputEle = document.getElementById('#input');
+const input$ = fromEvent(inputEle, 'input');
+
+input$
+  .pipe(
+    debounceTime(200),
+    distinctUntilChanged(),
+    switchMap(text => getSuggestions(text)),
+  )
+  .subscribe(...)
+```
+
+```js 8
+                                                                            
+const inputEle = document.getElementById('#input');
+const input$ = fromEvent(inputEle, 'input');
+
+input$
+  .pipe(
+    debounceTime(200),
+    distinctUntilChanged(),
+    switchMap(text => getSuggestions(text)),
+  )
+  .subscribe(...)
+```
+
+```js 9
+                                                                            
+const inputEle = document.getElementById('#input');
+const input$ = fromEvent(inputEle, 'input');
+
+input$
+  .pipe(
+    debounceTime(200),
+    distinctUntilChanged(),
+    switchMap(text => getSuggestions(text)),
+  )
+  .subscribe(...)
+```
+
+</CodeSurfer>
+
+---
+
+Marble diagrams
+
+---
+
+Tips
+
+---
+
+<List>
+
+<li><a target="_blank" href="https://rxmarbles.com/">RxJS marbles</a></li>
+
+<Appear>
+<li><a target="_blank" href="https://rxjs.dev/">Official RxJS</a></li>
+<li><a target="_blank" href="https://rxviz.com/">Rx Visualizer</a></li>
+<li><a target="_blank" href="https://www.learnrxjs.io/">Learn RxJS</a></li>
+<li><a target="_blank" href="https://reactive.how/">reactive.how</a></li>
+
+</Appear>
+
+</List>
+
+---
+
+<List>
+
+<li>verbal description of the problem</li>
+
+<Appear>
+<li><a target="_blank" href="https://rxjs.dev/operator-decision-tree">Operator Decision Tree</a></li>
+<li>'See Also' section of <a target="_blank" href="https://rxjs.dev/">RxJS</a></li>
+</Appear>
+
+</List>
+
+---
+
+<List>
+
+<li>how to debug rxjs ?</li>
+
+<Appear>
+<li>tap</li>
+<li><a target="_blank" href="https://rxjs.tools/">RxJS Tools</a></li>
+
+</Appear>
+
+</List>
+
+---
+
+<List>
+
+<li>Setup lint rules for common RxJS issues - <a target="_blank" href="https://cartant.github.io/rxjs-tslint-rules/">Lint rules</a></li>
+
+<Appear>
+<li>rxjs-prefer-angular-async-pipe</li>
+<li>rxjs-no-unsafe-takeuntil</li>
+<li>rxjs-prefer-angular-takeuntil</li>
+<li>rxjs-no-ignored-replay-buffer</li>
+</Appear>
+
+</List>
+
+---
+
+Limitations
+
+---
+
+<CodeSurferColumns>
+
+<Step>
+
+```js
+                                                
+        interval(1000).subscribe(d => {
+            if (d % 2 === 0)
+              console.log('tick');
+            else
+              console.log('tock')
+          });
+```
+
+```js
+const source$ = interval(1000).pipe(share());
+
+const even$ = source$.pipe(filter(d => d % 2 === 0), mapTo('tick'));
+const odd$ = source$.pipe(filter(d => d % 2 !== 0), mapTo('tock'));
+
+```
+
+</Step>
+
+
+</CodeSurferColumns>
+
+---
+
+<List>
+
+<li>Don't over use RxJS</li>
+
+<Appear>
+<li>switch to imperative when confused</li>
+<li>need not know all operators</li>
+</Appear>
+
+</List>
+
+---
+
+<CodeSurferColumns>
+
+<Step>
+  
+<List>
+
+<li>map</li>
+<li>filter</li>
+<li>scan</li>
+<li>switchMap</li>
+<li>throttleTime</li>
+<li>debounceTime</li>
+
+</List>
+
+<List>
+
+<li>withLatestFrom</li>
+<li>combineLatest</li>
+<li>zip</li>
+<li>forkJoin</li>
+<li>defer</li>
+<li>catchError</li>
+<li>retryWhen</li>
+
+</List>
+
+</Step>
+
+</CodeSurferColumns>
+
+---
+
+References & next
+
+<List>
+
+<li><a target="_blank" href="https://www.youtube.com/watch?v=B-nFj2o03i8">Complex features made easy with RxJS</a></li>
+<li><a target="_blank" href="https://www.youtube.com/watch?v=3LKMwkuK0ZE">RxJS 5 Thinking Reactively | Ben Lesh</a></li>
+<li><a target="_blank" href="https://www.youtube.com/watch?v=Z76QlSpYcck">Data Composition with RxJS | Deborah Kurata</a></li>
+
+</List>
+
+---
+
+Recap
+
+<List>
+
+<li>Reactive Architecture</li>
+<li>Higher Order operators</li>
+<li>Understanding and debugging operators</li>
+<li>Marble diagrams</li>
+<li>Tips</li>
+<li>Limitations</li>
+
+</List>
+
+---
+
+Q & A 🙋‍♂❔
+
+---
+
+Thank you 😊
