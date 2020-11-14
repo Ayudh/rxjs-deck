@@ -10,9 +10,18 @@ import { customTheme } from './theme'
 
 import { Helper } from './src/helper';
 import { Profile } from './src/profile';
+import { List } from './src/list';
+
+import ImperativeImg from './images/imperative.png';
+import ReactiveImg from './images/reactive.png';
 
 <!-- // export const theme = { ...vsDark, ...customTheme }; -->
-export const theme = {  ...themes.future, ...customTheme };
+export const theme = {  
+  ...themes.future, 
+  // ...vsDark,
+  // ...github,
+  ...customTheme 
+};
 
 <Head>
   <title>RxJS</title>
@@ -29,7 +38,446 @@ export const theme = {  ...themes.future, ...customTheme };
 
 ---
 
-Recap / Intro
+Introduction
+
+<List>
+
+<Appear>
+<li>RxJS is reactive extensions library for JavaScript</li>
+<li>"Think of RxJS as Lodash for events."</li>
+<li>Brings functional programming paradigm</li>
+
+</Appear>
+
+</List>
+
+---
+
+Agenda
+
+<List>
+
+<li>Reactive Architecture</li>
+<li>Higher Order operators</li>
+<li>Error handling</li>
+<li>Understanding and debugging RxJS</li>
+<li>Marble diagrams</li>
+<li>Tips</li>
+<li>Limitations</li>
+
+</List>
+
+---
+
+Imperative vs Reactive programming
+
+---
+
+<img src={ImperativeImg} />
+
+---
+
+Example
+
+<List>
+
+<li>Clicking on a refresh button which fetches data from an api and updates the UI</li>
+<li><a href="https://stackblitz.com/edit/rxjs-imperative-reactive" target="__blank">https://stackblitz.com/edit/rxjs-imperative-reactive</a></li>
+
+</List>
+
+---
+
+<CodeSurfer>
+
+```js 1,5 subtitle="button handler"
+refresh() {
+  this.http.get(URL).subscribe(data => {
+    this.score = data.score;
+  });
+}
+```
+
+```js 2,4 subtitle="api call"
+refresh() {
+  this.http.get(URL).subscribe(data => {
+    this.score = data.score;
+  });
+}
+```
+
+```js 3 subtitle="update ui"
+refresh() {
+  this.http.get(URL).subscribe(data => {
+    this.score = data.score;
+  });
+}
+```
+
+```js subtitle="not caring about previous api call"
+refresh() {
+  this.http.get(URL).subscribe(data => {
+    this.score = data.score;
+  });
+}
+```
+
+```js 2[3:19] subtitle="store the subscription"
+refresh() {
+  this.subscription = this.http.get(URL).subscribe(data => {
+    this.score = data.score;
+  });
+}
+```
+
+```js subtitle="cancel previous api if any"
+refresh() {
+  if (this.subscription) {
+    this.subscription.unsubscribe();
+  }
+  this.subscription = this.http.get(URL).subscribe(data => {
+    this.score = data.score;
+  });
+}
+```
+
+</CodeSurfer>
+
+---
+
+<List>
+
+<li>But what if there are more nested api calls?</li>
+
+<Appear>
+
+<li> click on button -> fetch a token -> then make a api call to fetch score</li>
+<li>lets change this into reactive approach</li>
+
+</Appear>
+
+</List>
+
+---
+
+<img src={ReactiveImg} />
+
+---
+
+when the _refresh button is clicked_ make  
+ an _api call and fetch the score_
+
+---
+
+<CodeSurferColumns sizes={[1,1]} themes={[github, vsDark]}>
+
+<Step subtitle="reacting to button click">
+
+when the _refresh button is clicked_ make  
+ an api call and fetch the score
+
+
+```js 2,4,6
+const refreshButton = document.getElementById('#refresh');
+const refresh$ = fromEvent(refreshButton, 'click');
+
+refresh$.subscribe(() => {
+
+});
+```
+
+</Step>
+
+<Step subtitle="api call">
+
+when the refresh button is clicked make  
+ an _api call and fetch the score_
+
+
+```js 8,10
+const refreshButton = document.getElementById('#refresh');
+const refresh$ = fromEvent(refreshButton, 'click');
+
+refresh$.subscribe(() => {
+
+});
+
+fetchScore().subscribe(d => {
+  
+});
+```
+
+</Step>
+
+<Step subtitle="how to join these two events ?">
+
+when the refresh button is clicked make  
+ an api call and fetch the score
+
+
+```js 4,6,8,10
+const refreshButton = document.getElementById('#refresh');
+const refresh$ = fromEvent(refreshButton, 'click');
+
+refresh$.subscribe(() => {
+
+});
+
+fetchScore().subscribe(d => {
+ 
+});
+```
+
+</Step>
+
+<Step subtitle="how about this ?">
+
+when the refresh button is clicked make  
+ an api call and fetch the score
+
+
+```js 4,5,7,8
+const refreshButton = document.getElementById('#refresh');
+const refresh$ = fromEvent(refreshButton, 'click');
+
+refresh$.subscribe(() => {
+  fetchScore().subscribe(d => {
+ 
+  });
+});
+```
+
+</Step>
+
+<Step subtitle="we use switchMap">
+
+when the refresh button is clicked make  
+ an api call and fetch the score
+
+
+```js 5[9:37]
+const refreshButton = document.getElementById('#refresh');
+const refresh$ = fromEvent(refreshButton, 'click');
+
+refresh$
+  .pipe(switchMap(() => fetchScore()))
+  .subscribe(() => {
+    
+  });
+```
+
+</Step>
+
+</CodeSurferColumns>
+
+---
+
+#### Drag and Drop
+
+<p style={{fontSize: '70%', margin: '0 10% 0 10%'}}>
+For each <span style={{color: 'red'}}>mousedown on the target</span>, you start  <br/>
+listening to <span style={{color: 'orange'}}>mousemoves on the document</span> until  <br/>
+a single <span style={{color: 'blueviolet'}}>mouseup on the document</span>
+</p>
+
+---
+
+<CodeSurferColumns sizes={[1,2]} themes={[github, vsDark]}>
+
+<Step>
+
+<p style={{fontSize: '70%', margin: '0 10% 0 10%'}}>
+For each <span style={{color: 'red'}}>mousedown on the target</span>, you start
+listening to <span style={{color: null}}>mousemoves on the document</span> until
+a single <span style={{color: null}}>mouseup on the document</span>
+</p>
+
+```js 2
+const target = document.getElementById('#target');
+const targetMouseDown$ = fromEvent(target, 'mousedown');
+```
+
+</Step>
+
+<Step>
+
+<p style={{fontSize: '70%', margin: '0 10% 0 10%'}}>
+For each <span style={{color: null}}>mousedown on the target</span>, you start
+listening to <span style={{color: 'orange'}}>mousemoves on the document</span> until
+a single <span style={{color: null}}>mouseup on the document</span>
+</p>
+
+```js 3
+const target = document.getElementById('#target');
+const targetMouseDown$ = fromEvent(target, 'mousedown');
+const docMouseMove$ = fromEvent(document, 'mousemove');
+```
+
+</Step>
+
+
+<Step>
+
+<p style={{fontSize: '70%', margin: '0 10% 0 10%'}}>
+For each <span style={{color: null}}>mousedown on the target</span>, you start
+listening to <span style={{color: null}}>mousemoves on the document</span> until
+a single <span style={{color: 'blueviolet'}}>mouseup on the document</span>
+</p>
+
+```js 4
+const target = document.getElementById('#target');
+const targetMouseDown$ = fromEvent(target, 'mousedown');
+const docMouseMove$ = fromEvent(document, 'mousemove');
+const docMouseUp$ = fromEvent(document, 'mouseup');
+
+```
+
+</Step>
+
+<Step subtitle="link these two events">
+
+<p style={{fontSize: '70%', margin: '0 10% 0 10%'}}>
+For each <span style={{color: null}}>mousedown on the target</span>, you start
+listening to <span style={{color: 'orange'}}>mousemoves on the document</span> until
+a single <span style={{color: 'blueviolet'}}>mouseup on the document</span>
+</p>
+
+```js 5
+const target = document.getElementById('#target');
+const targetMouseDown$ = fromEvent(target, 'mousedown');
+const docMouseMove$ = fromEvent(document, 'mousemove');
+const docMouseUp$ = fromEvent(document, 'mouseup');
+
+
+```
+
+</Step>
+
+<Step>
+
+<p style={{fontSize: '70%', margin: '0 10% 0 10%'}}>
+For each <span style={{color: null}}>mousedown on the target</span>, you start
+listening to <span style={{color: 'orange'}}>mousemoves on the document</span> until
+a single <span style={{color: 'blueviolet'}}>mouseup on the document</span>
+</p>
+
+```js 6
+const target = document.getElementById('#target');
+const targetMouseDown$ = fromEvent(target, 'mousedown');
+const docMouseMove$ = fromEvent(document, 'mousemove');
+const docMouseUp$ = fromEvent(document, 'mouseup');
+
+docMouseMove$.pipe(takeUntil(docMouseUp$))
+```
+
+</Step>
+
+<Step>
+
+<p style={{fontSize: '70%', margin: '0 10% 0 10%'}}>
+For each <span style={{color: 'red'}}>mousedown on the target</span>, you start
+listening to <span style={{color: null}}>mousemoves on the document</span> until
+a single <span style={{color: null}}>mouseup on the document</span>
+</p>
+
+```js 8:10
+const target = document.getElementById('#target');
+const targetMouseDown$ = fromEvent(target, 'mousedown');
+const docMouseMove$ = fromEvent(document, 'mousemove');
+const docMouseUp$ = fromEvent(document, 'mouseup');
+
+docMouseMove$.pipe(takeUntil(docMouseUp$))
+
+targetMouseDown$.pipe(
+  switchMap(...)
+)
+```
+
+</Step>
+
+<Step subtitle="link these events">
+
+<p style={{fontSize: '70%', margin: '0 10% 0 10%'}}>
+For each <span style={{color: 'red'}}>mousedown on the target</span>, you start
+listening to <span style={{color: 'orange'}}>mousemoves on the document</span> until
+a single <span style={{color: 'orange'}}>mouseup on the document</span>
+</p>
+
+```js 11
+const target = document.getElementById('#target');
+const targetMouseDown$ = fromEvent(target, 'mousedown');
+const docMouseMove$ = fromEvent(document, 'mousemove');
+const docMouseUp$ = fromEvent(document, 'mouseup');
+
+docMouseMove$.pipe(takeUntil(docMouseUp$))
+
+targetMouseDown$.pipe(
+  switchMap(...)
+)
+
+```
+
+</Step>
+
+<Step>
+
+<p style={{fontSize: '70%', margin: '0 10% 0 10%'}}>
+For each <span style={{color: 'red'}}>mousedown on the target</span>, you start
+listening to <span style={{color: 'orange'}}>mousemoves on the document</span> until
+a single <span style={{color: 'orange'}}>mouseup on the document</span>
+</p>
+
+```js
+const target = document.getElementById('#target');
+const targetMouseDown$ = fromEvent(target, 'mousedown');
+const docMouseMove$ = fromEvent(document, 'mousemove');
+const docMouseUp$ = fromEvent(document, 'mouseup');
+
+targetMouseDown$.pipe(
+  switchMap(() => docMouseMove$.pipe(takeUntil(docMouseUp$)))
+)
+
+```
+
+</Step>
+
+<Step>
+
+<p style={{fontSize: '70%', margin: '0 10% 0 10%'}}>
+For each <span style={{color: null}}>mousedown on the target</span>, you start
+listening to <span style={{color: null}}>mousemoves on the document</span> until
+a single <span style={{color: null}}>mouseup on the document</span>
+</p>
+
+```js
+const target = document.getElementById('#target');
+const targetMouseDown$ = fromEvent(target, 'mousedown');
+const docMouseMove$ = fromEvent(document, 'mousemove');
+const docMouseUp$ = fromEvent(document, 'mouseup');
+
+targetMouseDown$.pipe(
+  switchMap(() => docMouseMove$.pipe(takeUntil(docMouseUp$)))
+)
+
+```
+
+</Step>
+
+</CodeSurferColumns>
+
+---
+
+<List>
+
+<li>Think backwards</li>
+
+<Appear>
+<li>identify the different streams of events</li>
+<li>compose these together</li>
+
+</Appear>
+
+</List>
 
 ---
 

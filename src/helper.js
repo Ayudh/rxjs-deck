@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React from 'react';
 
 import './style.css';
@@ -8,11 +9,11 @@ export class Helper extends React.Component {
       <div className="helper">
         Use ⬅️ or ➡️ to navigate
         <br/>
-        Option/Ctrl + P : Presentation Mode
+        option/alt + P : Presentation Mode
         <br/>
-        Option/Ctrl + O : Overview Mode
+        option/alt + O : Overview Mode
         <br/>
-        Option/Ctrl + G : Grid Mode
+        option/alt + G : Grid Mode
       </div>
     );
   }
