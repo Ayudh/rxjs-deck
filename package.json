@@ -3,12 +3,13 @@
   "version": "1.0.0",
   "scripts": {
     "start": "mdx-deck deck.mdx",
-    "build": "mdx-deck build deck.mdx",
+    "build": "mdx-deck build deck.mdx && shx cp rxjs.ppsx public/static/rxjs.ppsx",
     "test": "echo \"there are no tests\""
   },
   "devDependencies": {
     "code-surfer": "3.1.0",
-    "mdx-deck": "3.0.13"
+    "mdx-deck": "3.0.13",
+    "shx": "^0.3.3"
   },
   "name": "rxjs-deck"
 }
