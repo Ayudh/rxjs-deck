@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "start": "mdx-deck deck.mdx",
-    "build": "mdx-deck build deck.mdx && shx cp rxjs.ppsx public/static/rxjs.ppsx",
+    "build": "mdx-deck build deck.mdx && shx cp rxjs-higher-order-operators.ppsx public/static/",
     "test": "echo \"there are no tests\""
   },
   "devDependencies": {
